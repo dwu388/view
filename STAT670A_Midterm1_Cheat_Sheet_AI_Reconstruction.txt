@@ -1,0 +1,783 @@
+AI RECONSTRUCTION NOTES
+
+- This is UTF-8 plain text written in Markdown-compatible form.
+- Preserve the numbered H1 sections (`#`) and H2 subsections (`##`).
+- Render inline equations enclosed by single dollar signs: `$ ... $`.
+- Render display equations enclosed by double dollar signs: `$$ ... $$`.
+- Preserve LaTeX commands inside equations, including `\frac`, `\sum`, `\int`, `\binom`, `\Gamma`, `\mathcal`, and `\operatorname`.
+- Preserve Markdown tables and ordered or bulleted lists.
+- A recognition guide for the common distributions is included. Do not expand it into a second full pmf/pdf reference table because those formulas already appear in `Distributions(1).pdf`.
+- Suggested reconstruction: Letter paper, two columns, compact spacing, black headings with a dark-blue accent, and readable 9-point body text.
+
+DOCUMENT CONTENT BEGINS
+
+
+**STAT 670A Midterm 1 Cheat Sheet**
+
+Probability foundations, transformations, expectations, families, approximations, and worked-problem logic
+
+This is a companion to *Distributions(1)*. The full repeated distribution table is omitted, but a distribution-recognition guide is included because identifying the correct model is a separate exam skill.
+
+# 1 Set Theory and Events
+
+## Core objects
+
+- **Experiment**: a process with an uncertain outcome.
+
+- **Sample space** $S$: set of all possible outcomes. It may be discrete (finite or countably infinite) or continuous (uncountable).
+
+- **Event** $A$: any subset of $S$. The event occurs when the observed outcome lies in $A$.
+
+- **Empty event** $\varnothing$: impossible event. **Certain event**: $S$.
+
+## Operations
+
+|                  |                                                      |
+|:-----------------|:-----------------------------------------------------|
+| **Union**        | $A\cup B$: $A$ or $B$ (or both) occurs.              |
+| **Intersection** | $A\cap B$: both $A$ and $B$ occur.                   |
+| **Complement**   | $A^c$: $A$ does not occur.                           |
+| **Difference**   | $A\setminus B=A\cap B^c$.                            |
+| **Subset**       | $A\subseteq B$: every outcome in $A$ is also in $B$. |
+
+## Event algebra
+
+$$\begin{gathered}
+A\cup B=B\cup A,\qquad A\cap B=B\cap A,\\
+A\cup(B\cup C)=(A\cup B)\cup C,\\
+A\cap(B\cap C)=(A\cap B)\cap C,\\
+A\cap(B\cup C)=(A\cap B)\cup(A\cap C),\\
+A\cup(B\cap C)=(A\cup B)\cap(A\cup C),\\
+(A\cup B)^c=A^c\cap B^c,\qquad
+(A\cap B)^c=A^c\cup B^c.
+\end{gathered}$$
+
+**Disjoint (mutually exclusive):** $A\cap B=\varnothing$. Events $A_1,A_2,\ldots$ are pairwise disjoint if $A_i\cap A_j=\varnothing$ for every $i\ne j$.
+
+**Partition of $S$:** a collection $A_1,A_2,\ldots$ that is pairwise disjoint and satisfies $\bigcup_i A_i=S$. Exactly one partition cell contains each outcome.
+
+# 2 Probability Foundations
+
+## Sigma algebra
+
+A collection $\mathcal B$ of subsets of $S$ is a sigma algebra when:
+
+1.  $\varnothing\in\mathcal B$;
+
+2.  $A\in\mathcal B\Rightarrow A^c\in\mathcal B$;
+
+3.  $A_1,A_2,\ldots\in\mathcal B\Rightarrow \bigcup_{i=1}^{\infty}A_i\in\mathcal B$.
+
+These closure rules identify the events to which probabilities may be assigned.
+
+## Probability axioms
+
+For $A\in\mathcal B$:
+
+1.  $P(A)\ge 0$;
+
+2.  $P(S)=1$;
+
+3.  if $A_1,A_2,\ldots$ are pairwise disjoint, then $$P\!\left(\bigcup_i A_i\right)=\sum_iP(A_i).$$
+
+For a finite or countable sample space with point masses $p_i\ge0$ and $\sum_i p_i=1$, define $P(A)=\sum_{i:s_i\in A}p_i$.
+
+## Essential consequences
+
+$$\begin{aligned}
+P(\varnothing)&=0, & 0\le P(A)&\le1,\\
+P(A^c)&=1-P(A),\\
+P(B\cap A^c)&=P(B)-P(A\cap B),\\
+P(A\cup B)&=P(A)+P(B)-P(A\cap B),\\
+A\subseteq B&\Rightarrow P(A)\le P(B).
+\end{aligned}$$
+
+**Bonferroni lower bound:** $$P(A\cap B)\ge P(A)+P(B)-1.$$ **Boole union bound:** $$P\!\left(\bigcup_i A_i\right)\le\sum_iP(A_i).$$ If $C_1,C_2,\ldots$ partitions $S$, then $$P(A)=\sum_iP(A\cap C_i)=\sum_iP(A\mid C_i)P(C_i).$$
+
+## Useful proof pattern
+
+If $P(A\cap B)=P(A)+P(B)$, inclusion-exclusion gives $$P(A\cup B)=P(A)+P(B)-P(A\cap B)=0.$$ Since $A,B\subseteq A\cup B$, monotonicity yields $P(A)=P(B)=0$.
+
+# 3 Counting and Equally Likely Outcomes
+
+**Multiplication rule:** if task $i$ can be completed in $n_i$ ways, a sequence of $k$ tasks has $\prod_{i=1}^k n_i$ outcomes.
+
+$$n!=n(n-1)\cdots2\cdot1,\qquad 0!=1,
+\qquad \binom nr=\frac{n!}{r!(n-r)!}.$$
+
+|           | Without replacement  | With replacement   |
+|:----------|:---------------------|:-------------------|
+| Ordered   | $\dfrac{n!}{(n-r)!}$ | $n^r$              |
+| Unordered | $\binom nr$          | $\binom{n+r-1}{r}$ |
+
+When all $N$ outcomes are equally likely, $$P(A)=\frac{|A|}{|S|}.$$
+
+## Counting decision checklist
+
+1.  Does order matter?
+
+2.  Is replacement allowed?
+
+3.  Are repeated objects distinguishable?
+
+4.  Count the entire sample space and the favorable outcomes under the *same* convention.
+
+## Five-card examples
+
+All hands are unordered and without replacement, so $|S|=\binom{52}{5}$.
+
+- Four aces: choose the fifth card, so $|A|=\binom{48}{1}$.
+
+- Four of a kind: choose the rank and side card, so $|A|=\binom{13}{1}\binom{48}{1}$.
+
+- Exactly one pair: choose pair rank, 2 suits, 3 other ranks, and one suit for each other rank: $$|A|=\binom{13}{1}\binom{4}{2}\binom{12}{3}4^3.$$
+
+# 4 Conditioning Bayes and Independence
+
+## Conditional probability and multiplication
+
+For $P(B)>0$, $$P(A\mid B)=\frac{P(A\cap B)}{P(B)},\qquad
+P(A\cap B)=P(A\mid B)P(B).$$ Also $P(A^c\mid B)=1-P(A\mid B)$, and conditional probabilities obey the ordinary probability axioms within the restricted universe $B$.
+
+## Law of total probability
+
+If $A_1,A_2,\ldots$ partitions $S$, $$P(B)=\sum_jP(B\mid A_j)P(A_j).$$ Use it when an outcome can occur through several mutually exclusive routes.
+
+## Bayes rule
+
+$$P(A_i\mid B)=
+\frac{P(B\mid A_i)P(A_i)}{\sum_jP(B\mid A_j)P(A_j)}.$$ Interpretation: posterior $\propto$ likelihood $\times$ prior. The denominator is the total probability of the observed evidence.
+
+## Two-stage selection template
+
+If the first-stage result changes the second-stage composition, condition on the first-stage result: $$P(\text{target at stage 2})
+=\sum_jP(\text{target at stage 2}\mid C_j)P(C_j).$$ For the applicant-list problem: $$P(\text{man at stage 2})=\frac35\frac25+\frac25\frac35=\frac{12}{25}.$$
+
+## Independence
+
+$A$ and $B$ are independent exactly when $$P(A\cap B)=P(A)P(B).$$ When the relevant conditional probability exists, this is equivalent to $P(A\mid B)=P(A)$ or $P(B\mid A)=P(B)$.
+
+If $A\perp\!\!\!\perp B$, then $A\perp\!\!\!\perp B^c$, $A^c\perp\!\!\!\perp B$, and $A^c\perp\!\!\!\perp B^c$.
+
+**Mutual independence:** every subcollection must satisfy $$P\!\left(\bigcap_{j=1}^k A_{i_j}\right)=\prod_{j=1}^kP(A_{i_j}).$$ Pairwise independence alone does not guarantee mutual independence. Likewise, one equality involving a triple intersection does not establish pairwise independence.
+
+# 5 Random Variables CDFs PMFs and PDFs
+
+## Random variable
+
+A random variable $X$ is a function $X:S\to\mathbb{R}$. Uppercase denotes the random variable; lowercase $x$ denotes a realized value. Its support is the set of values it can take with positive mass or density.
+
+For a discrete $X$, $$P_X(X=x_i)=P\{s\in S:X(s)=x_i\}.$$
+
+## CDF
+
+$$F_X(x)=P(X\le x).$$ A function is a CDF exactly when it is nondecreasing, right-continuous, and has limits $0$ at $-\infty$ and $1$ at $+\infty$.
+
+- A discrete CDF is a step function; a continuous random variable has a continuous CDF.
+
+- A CDF need not be strictly increasing.
+
+- $X$ and $Y$ are identically distributed iff $F_X(x)=F_Y(x)$ for every $x$.
+
+- Equal means and variances do *not* imply identical distributions.
+
+## PMF and PDF rules
+
+For a discrete $X$, $f_X(x)=P(X=x)$ and $\sum_x f_X(x)=1$.
+
+For a continuous $X$, $$F_X(x)=\int_{-\infty}^{x}f_X(t)\,dt,
+\qquad
+f_X(x)=F_X'(x)$$ where the derivative exists. A valid pmf/pdf is nonnegative and sums/integrates to 1.
+
+For continuous $X$, $P(X=x)=0$, so endpoints do not change an interval probability: $$P(a<X<b)=P(a\le X\le b)=F_X(b)-F_X(a).$$ A density value $f_X(x)$ is not itself a point probability.
+
+## Finding an unknown normalizing constant
+
+If $f_X(x)=c\,h(x)$ on support $\mathcal X$, solve $$1=\int_{\mathcal X}c\,h(x)\,dx
+\quad\Rightarrow\quad
+c=\left(\int_{\mathcal X}h(x)\,dx\right)^{-1},$$ after checking $h(x)\ge0$.
+
+# 6 Transformations of Random Variables
+
+Let $Y=g(X)$. Determine the support first: $$\mathcal X=\{x:f_X(x)>0\},\qquad
+\mathcal Y=\{g(x):x\in\mathcal X\}.$$
+
+## Universal CDF method
+
+$$F_Y(y)=P(g(X)\le y)
+=\int_{\{x\in\mathcal X:g(x)\le y\}}f_X(x)\,dx.$$ This works even when $g$ is not one-to-one. Carefully solve the inequality and split the preimage into all relevant intervals.
+
+## Discrete transformation
+
+$$f_Y(y)=\sum_{x:g(x)=y}f_X(x),\qquad y\in\mathcal Y.$$ Add the masses of *all* $x$ values mapping to the same $y$.
+
+## Continuous monotone transformation
+
+If $g$ is one-to-one and monotone, $$f_Y(y)=f_X\!\left(g^{-1}(y)\right)
+\left|\frac{d}{dy}g^{-1}(y)\right|,\qquad y\in\mathcal Y.$$ For the CDF: $$F_Y(y)=
+\begin{cases}
+F_X(g^{-1}(y)), & g\text{ increasing},\\
+1-F_X(g^{-1}(y)), & g\text{ decreasing and }X\text{ continuous}.
+\end{cases}$$
+
+## Piecewise monotone many-to-one transformation
+
+Partition $\mathcal X$ into monotone branches $A_i$. If $g_i$ is the restriction on branch $i$, $$f_Y(y)=\sum_i f_X\!\left(g_i^{-1}(y)\right)
+\left|\frac{d}{dy}g_i^{-1}(y)\right|.$$ For $Y=X^2$, both $x=\sqrt y$ and $x=-\sqrt y$ contribute whenever both lie in the support.
+
+## Probability integral transform
+
+If $F_X$ is continuous, $$U=F_X(X)\sim \operatorname{Uniform}(0,1).$$ This is the central reason a transformed continuous CDF value is uniform.
+
+## Worked transformation patterns
+
+- For $Y=\sqrt X$: $x=y^2$, $|dx/dy|=2y$, and transform the support before substituting.
+
+- For $Z=1-e^{-X/\beta}$ when that expression is the CDF of $X$: $Z=F_X(X)$, so the probability integral transform gives Uniform$(0,1)$ immediately.
+
+- For $Y=-\log X$ with $0<X<1$: the map is decreasing, $x=e^{-y}$, and $y>0$.
+
+- For $Y=1/X$ with $X>0$: $x=1/y$, $|dx/dy|=1/y^2$, and $y>0$.
+
+# 7 Expectation Moments and Variance
+
+## Expectation of a function
+
+$$\operatorname{E}[g(X)]=
+\begin{cases}
+\displaystyle\sum_{x\in\mathcal X}g(x)f_X(x), & X\text{ discrete},\\[6pt]
+\displaystyle\int_{\mathcal X}g(x)f_X(x)\,dx, & X\text{ continuous}.
+\end{cases}$$ The expectation exists when $\operatorname{E}|g(X)|<\infty$. A Cauchy random variable is the standard counterexample: its mean does not exist.
+
+## Expectation properties
+
+Whenever the expectations exist: $$\begin{aligned}
+\operatorname{E}[ag_1(X)+bg_2(X)+c]
+&=a\operatorname{E}[g_1(X)]+b\operatorname{E}[g_2(X)]+c,\\
+g_1(x)\ge0&\Rightarrow \operatorname{E}[g_1(X)]\ge0,\\
+g_1(x)\le g_2(x)&\Rightarrow \operatorname{E}[g_1(X)]\le\operatorname{E}[g_2(X)],\\
+a\le g(X)\le b&\Rightarrow a\le\operatorname{E}[g(X)]\le b.
+\end{aligned}$$
+
+## Moments
+
+The $n$th raw moment and $n$th central moment are $$\mu_n'=\operatorname{E}(X^n),\qquad \mu_n=\operatorname{E}[(X-\mu)^n],\quad \mu=\operatorname{E} X.$$ Variance is the second central moment: $$\operatorname{Var}(X)=\operatorname{E}[(X-\operatorname{E} X)^2]=\operatorname{E}(X^2)-[\operatorname{E} X]^2.$$ Standard deviation is $\operatorname{SD}(X)=\sqrt{\operatorname{Var}(X)}$.
+
+$$\operatorname{Var}(aX+b)=a^2\operatorname{Var}(X),\qquad
+\operatorname{SD}(aX+b)=|a|\operatorname{SD}(X).$$
+
+**Nonnegativity check:** $\operatorname{Var}(X)\ge0$, hence $\operatorname{E}(X^2)\ge[\operatorname{E} X]^2$.
+
+## Gamma-function moment identity used in the practice set
+
+For the course’s shape-scale parameterization and positive integers $n$ and $\alpha$, $$\operatorname{E}(X^n)=\beta^n\frac{\Gamma(\alpha+n)}{\Gamma(\alpha)}
+=\beta^n\frac{(\alpha+n-1)!}{(\alpha-1)!}.$$ Key identities: $$\Gamma(a+1)=a\Gamma(a),\qquad \Gamma(m)=(m-1)!\ \text{for integer }m\ge1.$$
+
+# 8 Moment Generating Functions
+
+## Definition and existence
+
+$$M_X(t)=\operatorname{E}(e^{tX}).$$ An MGF exists only if the expectation is finite throughout some open neighborhood of $t=0$. For discrete and continuous variables, compute it with the usual expectation sum or integral.
+
+## Recovering moments
+
+$$M_X^{(n)}(0)=\operatorname{E}(X^n).$$ Thus $$\operatorname{E} X=M_X'(0),\qquad
+\operatorname{Var}(X)=M_X''(0)-[M_X'(0)]^2.$$
+
+## Linear transformation
+
+$$M_{aX+b}(t)=e^{bt}M_X(at).$$
+
+## Identification and convergence
+
+- If MGFs exist and agree on a neighborhood of 0, the corresponding CDFs are identical.
+
+- For bounded-support variables, equality of all moments is equivalent to equality of the distributions.
+
+- If $M_{X_n}(t)\to M_X(t)$ near 0 and the limit is an MGF, then $F_{X_n}(x)\to F_X(x)$ at continuity points of $F_X$.
+
+## MGF workflow
+
+1.  Write $\operatorname{E}(e^{tX})$ as a sum or integral.
+
+2.  Combine $e^{tx}$ with the kernel already containing $x$.
+
+3.  Recognize a normalized pmf/pdf or use a known algebraic expansion.
+
+4.  State the allowable values of $t$.
+
+5.  Differentiate only after simplifying.
+
+# 9 Approximation Results
+
+## Poisson approximation to a binomial count
+
+When $n$ is large, $p$ is small, and $np=\lambda$ is moderate, $$\operatorname{Binomial}(n,p)\approx\operatorname{Poisson}(\lambda).$$ The lecture derives this by MGF convergence. This approximation is useful for rare events across many independent opportunities.
+
+## Central limit theorem
+
+For i.i.d. $X_i$ with mean $\mu$ and finite variance $\sigma^2$, $$\sum_{i=1}^nX_i\ \approx\ N(n\mu,n\sigma^2)
+\quad\text{for large }n.$$ Equivalently, $$\frac{\sum_iX_i-n\mu}{\sigma\sqrt n}\approx N(0,1).$$ For a discrete count approximated by a continuous normal variable, use a continuity correction: $$P(X\le k)\approx P(Y<k+0.5),\qquad
+P(X\ge k)\approx P(Y>k-0.5).$$
+
+# 10 Distribution Recognition Guide
+
+Identify a distribution from the structure of the experiment, not from a single keyword. First decide whether the random variable is discrete or continuous. Then ask what is fixed, what is counted or measured, whether sampling stops at a target success, and whether replacement occurs.
+
+## Discrete distributions at a glance
+
+| Distribution | Keywords or structural clues | Main question |
+|:-------------|:-----------------------------|:--------------|
+| **Bernoulli** | one trial, success/failure, yes/no, defective/not defective | Is there exactly **one binary trial**? |
+| **Binomial** | fixed number $n$, number of successes, independent trials, constant $p$ | Am I counting successes in a **fixed number of trials**? |
+| **Geometric** | until first success, first defective, first arrival | How many trials until the **first success**? |
+| **Negative binomial** | until the $r$th success, second defective, third success | How many trials or failures until the **$r$th success**? |
+| **Poisson** | number of events, arrivals, defects, calls, accidents, per hour/day/area | Am I counting events in a **fixed interval** at rate $\lambda$? |
+| **Hypergeometric** | without replacement, finite population, sample from $N$, exactly $M$ successes in the population | Am I sampling **without replacement**? |
+
+## Bernoulli
+
+Look for one item or one trial with only two possible outcomes, such as defective/not defective or success/failure.
+
+Example: a randomly selected unit has a 10% probability of being defective. Define
+
+$$
+X=
+\begin{cases}
+1, & \text{defective},\\
+0, & \text{not defective}.
+\end{cases}
+$$
+
+Then
+
+$$
+X\sim\operatorname{Bernoulli}(0.1).
+$$
+
+Recognition pattern:
+
+$$
+\boxed{\text{one yes/no trial}}
+$$
+
+## Binomial
+
+Look for $n$ trials, a count of successes, independence, and the same success probability $p$ on every trial.
+
+Example: Manager A selects 10 units and counts how many are defective. Then
+
+$$
+X\sim\operatorname{Binomial}(10,0.1).
+$$
+
+Recognition pattern:
+
+$$
+\boxed{\text{fixed }n+\text{count successes}}
+$$
+
+The trials should be independent with constant $p$.
+
+## Geometric
+
+Look for “until the first success,” “first defective,” “first failure,” or “number of attempts before the first success.”
+
+Example: inspect units until the first defective is found. Then
+
+$$
+X\sim\operatorname{Geometric}(p).
+$$
+
+Under the course convention, $X=1,2,3,\ldots$ counts the trial on which the first success occurs.
+
+Recognition pattern:
+
+$$
+\boxed{\text{continue until the first success}}
+$$
+
+The geometric distribution is the negative binomial special case $r=1$.
+
+## Negative binomial
+
+Look for “until the second success,” “until the third defective,” “the $r$th success,” or “keep sampling until $r$ successes.”
+
+Example: Manager B checks units until he finds the second defective. The stopping rule is reaching success number $r=2$, so a negative binomial model applies.
+
+Two common variable definitions are:
+
+- **Number of trials until the $r$th success:** $x=r,r+1,\ldots$
+- **Number of failures before the $r$th success:** $y=0,1,2,\ldots$
+
+Recognition pattern:
+
+$$
+\boxed{\text{continue until success number }r}
+$$
+
+Always state which convention is being used before applying a formula.
+
+## Poisson
+
+Look for a count of occurrences in a fixed amount of time, space, area, length, or volume, together with a rate $\lambda$.
+
+Examples include customers arriving in one hour, defects in one square meter, or typing errors on a page. Typically,
+
+$$
+X\sim\operatorname{Poisson}(\lambda),
+$$
+
+with
+
+$$
+\operatorname{E}(X)=\lambda,
+\qquad
+\operatorname{Var}(X)=\lambda.
+$$
+
+Recognition pattern:
+
+$$
+\boxed{\text{count events in a fixed time or space interval}}
+$$
+
+If the rate is stated per unit, rescale it to the full interval before calculating.
+
+## Hypergeometric
+
+The decisive clue is
+
+$$
+\boxed{\text{sampling without replacement}}.
+$$
+
+Look for a finite population of $N$ objects, $M$ objects with the characteristic of interest, and a sample of $K$ objects selected without replacement.
+
+Example: a box contains 20 components, 5 defective. Select 4 without replacement and count the number of defectives. This is hypergeometric.
+
+Key comparison:
+
+$$
+\boxed{\text{Binomial: independent trials or replacement}}
+$$
+
+$$
+\boxed{\text{Hypergeometric: sampling without replacement}}
+$$
+
+## Continuous distributions at a glance
+
+| Distribution | Keywords or structural clues |
+|:-------------|:-----------------------------|
+| **Uniform** | equally likely anywhere between $a$ and $b$, constant density |
+| **Normal** | bell-shaped, symmetric, mean $\mu$, variance $\sigma^2$ |
+| **Exponential** | waiting time until one event, lifetime, time between Poisson events |
+| **Gamma** | waiting time until several events, total waiting time, positive continuous variable |
+| **Chi-square** | variance inference, sum of squared standard normals, degrees of freedom |
+| **Beta** | probability, proportion, or fraction between 0 and 1 |
+
+## Uniform
+
+Look for “equally likely between $a$ and $b$,” a random point in an interval, or a constant density. Its support is
+
+$$
+a\le X\le b.
+$$
+
+Example: a bus arrives at a random time between 2:00 and 2:20, with every arrival time equally likely.
+
+Recognition pattern:
+
+$$
+\boxed{\text{equally likely over an interval}}
+$$
+
+## Normal
+
+Look for “normal,” “Gaussian,” “bell-shaped,” “symmetric,” or “approximately normal.” The standard parameterization is
+
+$$
+X\sim N(\mu,\sigma^2).
+$$
+
+Typical examples are heights, test scores, measurement errors, or quantities explicitly stated to be normally distributed.
+
+Recognition pattern:
+
+$$
+\boxed{\text{continuous and symmetric bell-shaped distribution}}
+$$
+
+## Exponential
+
+Look for waiting time until the next event, time until failure, lifetime, or time between arrivals.
+
+Under the course scale parameterization,
+
+$$
+\operatorname{E}(X)=\beta.
+$$
+
+Example: if calls follow a Poisson process, the waiting time until the next call is exponential.
+
+Useful connection:
+
+$$
+\boxed{\text{Poisson: number of events}}
+$$
+
+$$
+\boxed{\text{Exponential: waiting time until the next event}}
+$$
+
+## Gamma
+
+Look for waiting time until several events, total waiting time, or another positive continuous measurement. Under the course parameterization,
+
+$$
+X\sim\operatorname{Gamma}(\alpha,\beta),
+\qquad
+\operatorname{E}(X)=\alpha\beta.
+$$
+
+Conceptually, exponential models waiting until the first event, while gamma can model waiting until several events. For example, “How long until the fifth arrival?” suggests a gamma model.
+
+## Chi-square
+
+Look for $\chi^2$, degrees of freedom, sample variance, inference about a variance, or a sum of squared standard normal variables.
+
+Under the course notation,
+
+$$
+X\sim\chi^2(p),
+\qquad
+\operatorname{E}(X)=p,
+\qquad
+\operatorname{Var}(X)=2p.
+$$
+
+Recognition pattern:
+
+$$
+\boxed{\text{variance and degrees of freedom}}
+$$
+
+This distribution appears especially often in statistical inference.
+
+## Beta
+
+Look for a continuous probability, proportion, or fraction restricted to
+
+$$
+0\le X\le1.
+$$
+
+Recognition pattern:
+
+$$
+\boxed{\text{continuous proportion between 0 and 1}}
+$$
+
+## Fastest exam decision tree
+
+For a discrete random variable, first ask whether the experiment consists of success/failure trials.
+
+- One trial: **Bernoulli**
+- Fixed $n$, count successes: **Binomial**
+- Continue until first success: **Geometric**
+- Continue until the $r$th success: **Negative binomial**
+- Sample without replacement from a finite population: **Hypergeometric**
+- Count events over a fixed time or space interval: **Poisson**
+
+For a continuous random variable:
+
+- Equally likely over $[a,b]$: **Uniform**
+- Symmetric bell shape: **Normal**
+- Waiting until the next event: **Exponential**
+- Waiting until several events: **Gamma**
+- Variance or degrees of freedom: **Chi-square**
+- Proportion between 0 and 1: **Beta**
+
+The three most important distinctions are:
+
+$$
+\boxed{\text{Binomial: fixed trials, count successes}}
+$$
+
+$$
+\boxed{\text{Negative binomial: fixed successes, count trials or failures}}
+$$
+
+$$
+\boxed{\text{Poisson: fixed interval, count events}}
+$$
+
+# 11 Distribution Material Not on the Exclusion Sheet
+
+## Discrete uniform on $\{1,\ldots,N\}$
+
+$$P(X=x\mid N)=\frac1N,\quad x=1,\ldots,N,$$ $$\operatorname{E} X=\frac{N+1}{2},\qquad
+\operatorname{Var}(X)=\frac{(N+1)(N-1)}{12}.$$
+
+## Lognormal
+
+If $\log X\sim N(\mu,\sigma^2)$, then $X$ is lognormal and $X=e^Y$ for $Y\sim N(\mu,\sigma^2)$. Its density, obtained by transformation, is $$f_X(x)=\frac{1}{\sqrt{2\pi}\,\sigma x}
+\exp\!\left[-\frac{(\log x-\mu)^2}{2\sigma^2}\right],\qquad x>0.$$
+
+# 12 Exponential Families
+
+## General form
+
+A family is exponential if its pmf/pdf can be written $$f(x\mid\boldsymbol\theta)=h(x)c(\boldsymbol\theta)
+\exp\!\left\{\sum_{i=1}^k w_i(\boldsymbol\theta)t_i(x)\right\}.$$ Separation is essential:
+
+- $h(x)$ and every $t_i(x)$ may depend on $x$ but not on $\boldsymbol\theta$.
+
+- $c(\boldsymbol\theta)$ and every $w_i(\boldsymbol\theta)$ may depend on parameters but not on $x$.
+
+- The support indicator belongs in $h(x)$ and must not depend on the unknown parameter.
+
+The indicator of a set $A$ is $$\mathbf{1}_A(x)=
+\begin{cases}
+1,&x\in A,\\
+0,&x\notin A.
+\end{cases}$$
+
+## Recognition workflow
+
+1.  Write powers as exponentials: $a^b=\exp(b\log a)$.
+
+2.  Expand squares or products that mix $x$ and parameters.
+
+3.  Group $x$-only, parameter-only, and separable product terms.
+
+4.  Express support with an indicator.
+
+5.  If the support depends on an unknown parameter, the stated family generally fails this fixed-support exponential-family form.
+
+The representation is not unique; constants can be redistributed among $h$, $c$, $w_i$, and $t_i$ while preserving separation.
+
+## Why some candidates fail
+
+- In the Weibull family with both shape $\gamma$ and scale $\beta$ unknown, the term $x^\gamma$ cannot be separated into $w(\gamma,\beta)t(x)$ with a fixed finite set of $x$-statistics. Hence the two-parameter family is not exponential in this form.
+
+- For $f(x\mid\theta)=\theta^{-1}\exp(1-x/\theta)\mathbf{1}_{(\theta,\infty)}(x)$, the support indicator depends on both $x$ and $\theta$, so it cannot serve as $h(x)$.
+
+## Lognormal example
+
+Expand $$-\frac{(\log x-\mu)^2}{2\sigma^2}
+=-\frac{(\log x)^2}{2\sigma^2}
++\frac{\mu\log x}{\sigma^2}
+-\frac{\mu^2}{2\sigma^2}.$$ This separates using statistics $t_1(x)=-(\log x)^2/2$ and $t_2(x)=\log x$, so the lognormal family is exponential.
+
+## Natural parameterization
+
+Write $$f(x\mid\boldsymbol\eta)=h(x)c^*(\boldsymbol\eta)
+\exp\!\left\{\sum_{i=1}^k\eta_i t_i(x)\right\}.$$ The natural parameter space is $$\mathcal H=\left\{\boldsymbol\eta:
+\int h(x)\exp\!\left(\sum_i\eta_it_i(x)\right)dx<\infty\right\}.$$ For a normal family, one common choice is $\eta_1=\mu/\sigma^2$ and $\eta_2=-1/(2\sigma^2)$, so $\eta_2<0$. For a binomial family with fixed $n$, $\eta=\log[p/(1-p)]\in\mathbb{R}$.
+
+## Full versus curved
+
+If the original parameter vector has dimension $d$ and the natural statistic vector has dimension $k$, the family is **full** when $d=k$ and **curved** when $d<k$.
+
+# 13 Location and Scale Families
+
+Given a standard density $f$:
+
+- **Location family**: $g(x\mid\mu)=f(x-\mu)$.
+
+- **Scale family**: $g(x\mid\sigma)=\sigma^{-1}f(x/\sigma)$, $\sigma>0$.
+
+- **Location-scale family**: $$g(x\mid\mu,\sigma)=\frac1\sigma
+    f\!\left(\frac{x-\mu}{\sigma}\right),\qquad\sigma>0.$$
+
+The $1/\sigma$ factor is the Jacobian that makes the density integrate to 1.
+
+Equivalently, if $Z$ has standard density $f$, then $$X=\sigma Z+\mu.$$ When the moments exist, $$\operatorname{E} X=\sigma\operatorname{E} Z+\mu,
+\qquad
+\operatorname{Var}(X)=\sigma^2\operatorname{Var}(Z).$$ For probabilities, $$P(X\le x)=P\!\left(Z\le\frac{x-\mu}{\sigma}\right).$$
+
+# 14 Probability Inequalities
+
+## General nonnegative-function bound
+
+For $g(X)\ge0$ and $r>0$, $$P(g(X)\ge r)\le\frac{\operatorname{E}[g(X)]}{r}.$$ This is the Markov/Chebyshev template in the lecture notes.
+
+Set $g(X)=(X-\mu)^2$ and $r=k^2\sigma^2$ to obtain $$P(|X-\mu|\ge k\sigma)\le\frac1{k^2},$$ or equivalently $$P(|X-\mu|<k\sigma)\ge1-\frac1{k^2}.$$
+
+## Vysochanskii-Petunin inequality
+
+For a unimodal density, let $\xi^2=\operatorname{E}[(X-\alpha)^2]$. Then $$P(|X-\alpha|>\epsilon)\le
+\begin{cases}
+\dfrac{4\xi^2}{9\epsilon^2}, & \epsilon\ge\sqrt{8/3}\,\xi,\\[6pt]
+\dfrac{4\xi^2}{3\epsilon^2}-\dfrac13, & \epsilon\le\sqrt{8/3}\,\xi.
+\end{cases}$$ With $\alpha=\mu$ and $\epsilon=3\sigma$, the first branch gives $$P(|X-\mu|>3\sigma)\le\frac4{81},$$ a stronger bound than Chebyshev’s $1/9$ for unimodal distributions.
+
+# 15 Worked Problem Recognition and Exam Traps
+
+## Define the random variable before calculating
+
+State exactly what is counted or measured, its support, and the relevant assumptions. Examples from the practice set:
+
+- “Number of defectives among 10 independent units” is a fixed-number-of-trials count.
+
+- “Trial on which the second defective occurs” is a waiting-time-to-the-$r$th-success count.
+
+- “Number of imperfections in 3 square yards” rescales the rate from 2 per square yard to 6 for the full area.
+
+## Complement strategy
+
+For “at least one,” calculate $$P(X\ge1)=1-P(X=0).$$ For “at least two,” calculate $$P(X\ge2)=1-P(X=0)-P(X=1).$$ This is usually shorter and less error-prone than summing the upper tail.
+
+For the practice manufacturing problem, if $X$ counts defectives among 10 units, $$P(\text{Manager A stops})
+=1-(0.9)^{10}-10(0.1)(0.9)^9.$$ If $Y$ is the trial on which the second defective appears, $$P(\text{Manager B stops})
+=\sum_{y=2}^{10}(y-1)(0.1)^2(0.9)^{y-2}.$$ For the textile problem, a rate of 2 per square yard becomes 6 over 3 square yards, so $$P(\text{at least one imperfection})=1-e^{-6}.$$
+
+## Support conventions matter
+
+For a waiting-time variable, decide whether it counts total trials or failures before the target success. The lower endpoint changes, so always write the random-variable definition and support before using a formula.
+
+## True or false lessons
+
+- Same mean and variance $\not\Rightarrow$ same distribution; same CDF $\Leftrightarrow$ same distribution.
+
+- If $P(B)>0$ and $P(A\mid B)=P(A)$, then $A$ and $B$ are independent.
+
+- A CDF is nondecreasing, not necessarily strictly increasing.
+
+- $\operatorname{E}|X|$ need not exist for every random variable.
+
+- The gamma density is asymmetric for its allowable parameter values.
+
+## Final answer checklist
+
+1.  Define events or random variables.
+
+2.  State support and parameterization.
+
+3.  Name the rule or theorem being used.
+
+4.  Show the substitution or probability decomposition.
+
+5.  Check that the result is between 0 and 1 and matches the event’s direction.
+
+# 16 Compact Algebra and Calculus Identities
+
+$$\begin{aligned}
+\log(e^a)&=a, & e^{\log x}&=x\quad(x>0),\\
+\log(ab)&=\log a+\log b, &
+\log(a^b)&=b\log a,\\
+\frac{d}{dx}\log x&=\frac1x, &
+\frac{d}{dx}e^{g(x)}&=e^{g(x)}g'(x),\\
+\frac{d}{dx}(1-x)^{b}&=-b(1-x)^{b-1},\\
+\frac{d}{dx}\log(1-x)&=-\frac1{1-x}.
+\end{aligned}$$
+
+**Binomial theorem:** $$(a+b)^n=\sum_{i=0}^n\binom ni a^ib^{n-i}.$$
+
+**Change-of-variable reminder:** after finding $x=g^{-1}(y)$, use the absolute Jacobian $|dx/dy|$ and the transformed support. Never stop after substituting into $f_X$.
+
+**Exponential-family reminder:** terms involving both $x$ and an unknown parameter are allowed only when they separate into a parameter-only coefficient times an $x$-only statistic. A parameter-dependent support is the major red flag.
+
+DOCUMENT CONTENT ENDS

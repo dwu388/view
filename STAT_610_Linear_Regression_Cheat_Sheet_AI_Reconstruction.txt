@@ -1,0 +1,678 @@
+STAT 610 MIDTERM 1 CHEAT SHEET
+AI-RECONSTRUCTION SOURCE
+
+PURPOSE
+This plain-text source preserves the content and organization of the condensed
+STAT 610 cheat sheet while representing equations in LaTeX. It is intended to
+be readable directly or supplied to an AI agent to reconstruct a polished PDF.
+
+======================================================================
+RECONSTRUCTION SPECIFICATION
+======================================================================
+
+Output format:
+- US Letter, portrait, exactly 2 pages.
+- Two equal-width columns per page with a thin vertical divider.
+- Reading order: page 1 left column, page 1 right column, page 2 left
+  column, page 2 right column.
+- Compact formula-first design. Do not add R commands or software code.
+
+Header and footer:
+- Running header, left: "STAT 610 Midterm 1 Cheat Sheet"
+- Running header, right: "Simple Linear Regression Models"
+- Thin horizontal rule below the running header.
+- Centered page number in the footer.
+
+Page 1 title block:
+- Main title: "STAT 610 Midterm 1 Cheat Sheet"
+- Subtitle: "Simple linear regression: estimation, inference, prediction,
+  and ANOVA"
+- Note: "Condensed formula-first companion to the attached STAT 610
+  lecture deck"
+
+Suggested visual style:
+- Body text: compact sans-serif, approximately 6.5-7 pt.
+- Section headings: bold blue, approximately 8.5-9 pt, numbered 1-24.
+- Equations: centered and slightly larger than body text.
+- Tables: dark-blue header row, white header text, alternating white and
+  light-gray rows.
+- Notes: pale-blue background with a blue left border.
+- Warnings: pale-red background with a dark-red left border.
+- Keep notation, subscripts, superscripts, hats, bars, and Greek letters exact.
+
+Equation rendering:
+- Text between $...$ is inline LaTeX.
+- Text between $$...$$ is display LaTeX.
+- Do not replace formulas with images.
+
+======================================================================
+CONTENT IN READING ORDER
+======================================================================
+
+1. REGRESSION GOAL, DATA, AND NOTATION
+
+Regression models the relationship between predictor(s) and a response.
+Estimation describes the population mean relationship using observed data;
+prediction forecasts an outcome at specified input values. Simple linear
+regression has one predictor $x$ (any type) and one continuous response $Y$.
+
+Data types:
+- Numeric: discrete counts or continuous measurements.
+- Categorical: nominal labels or ordinal levels.
+
+| Symbol | Meaning |
+|---|---|
+| $x_i, Y_i$ | Observed predictor and response for experimental unit $i$. |
+| $\hat{Y}_i$ | Fitted response from the sample regression line. |
+| $e_i$ | Residual: $e_i=Y_i-\hat{Y}_i$; observable surrogate for $\varepsilon_i$. |
+| $\beta_0,\beta_1,\sigma^2$ | Population intercept, slope, and common error variance. |
+| $b_0,b_1,\mathrm{MSE}$ | Sample estimates of $\beta_0,\beta_1,\sigma^2$. |
+
+
+2. POPULATION MODEL AND LINE CONDITIONS
+
+Population model and conditional mean:
+
+$$
+Y_i=\beta_0+\beta_1x_i+\varepsilon_i,
+\qquad
+E(Y_i)=\beta_0+\beta_1x_i.
+$$
+
+Sample fitted line and residual:
+
+$$
+\hat{Y}_i=b_0+b_1x_i,
+\qquad
+e_i=Y_i-\hat{Y}_i.
+$$
+
+The four LINE conditions:
+- L - Linear mean: $E(Y_i)$ is linear in $x_i$.
+- I - Independent errors: $\varepsilon_1,\ldots,\varepsilon_n$ are independent.
+- N - Normal errors: errors at each $x$ are normally distributed.
+- E - Equal variance: $\operatorname{Var}(\varepsilon_i)=\sigma^2$ for every $x$.
+
+Compactly:
+
+$$
+\varepsilon_i\text{ are independent }N(0,\sigma^2).
+$$
+
+NOTE - Normality:
+The assumption concerns errors conditional on predictor values, not
+necessarily the marginal distributions of $x$ or $Y$.
+
+
+3. LEAST-SQUARES ESTIMATION
+
+Choose $b_0$ and $b_1$ to minimize the sum of squared residuals:
+
+$$
+Q=\sum_{i=1}^n\left[Y_i-(b_0+b_1x_i)\right]^2
+  =\sum_{i=1}^n e_i^2
+  =\mathrm{SSE}.
+$$
+
+Normal equations from differentiation:
+
+$$
+\sum_{i=1}^n(Y_i-b_0-b_1x_i)=0,
+$$
+
+$$
+\sum_{i=1}^n x_i(Y_i-b_0-b_1x_i)=0.
+$$
+
+Computational sums:
+
+$$
+S_{xx}=\sum_{i=1}^n(x_i-\bar{x})^2
+      =\sum_{i=1}^n x_i^2-n\bar{x}^2,
+$$
+
+$$
+S_{yy}=\sum_{i=1}^n(Y_i-\bar{Y})^2
+      =\sum_{i=1}^n Y_i^2-n\bar{Y}^2,
+$$
+
+$$
+S_{xy}=\sum_{i=1}^n(x_i-\bar{x})(Y_i-\bar{Y})
+      =\sum_{i=1}^n x_iY_i-n\bar{x}\bar{Y}.
+$$
+
+Least-squares estimates:
+
+$$
+b_1=\frac{S_{xy}}{S_{xx}},
+\qquad
+b_0=\bar{Y}-b_1\bar{x}.
+$$
+
+Important properties:
+- The fitted line passes through $(\bar{x},\bar{Y})$.
+- $\sum e_i=0$.
+- $\sum x_ie_i=0$.
+- The average fitted response equals the average observed response:
+  $\overline{\hat{Y}}=\bar{Y}$.
+- $S_{xx}>0$, so $\operatorname{sign}(b_1)=\operatorname{sign}(S_{xy})$.
+
+
+4. COEFFICIENT INTERPRETATION
+
+| Estimate | Interpretation |
+|---|---|
+| $b_0$ | Predicted response when $x=0$. Interpret only if zero is meaningful and within a useful range. |
+| $b_1$ | Estimated change in the mean response per one-unit increase in $x$. Units are response units per predictor unit. |
+
+WARNING - Extrapolation:
+Predictions and intercept interpretations outside the observed $x$ range may
+be meaningless. In the height-weight example, the negative intercept
+corresponds to an impossible height of zero.
+
+
+5. PEARSON CORRELATION
+
+$$
+r_{xy}=\frac{S_{xy}}{\sqrt{S_{xx}S_{yy}}},
+\qquad
+-1\le r_{xy}\le 1.
+$$
+
+- $r$ is a unitless measure of the direction and strength of a linear
+  association.
+- $r=1$ or $r=-1$ indicates a perfect positive or negative line.
+- $r=0$ indicates no linear association.
+- Slope-correlation relationships:
+
+$$
+b_1=r\sqrt{\frac{S_{yy}}{S_{xx}}},
+\qquad
+r=b_1\sqrt{\frac{S_{xx}}{S_{yy}}}.
+$$
+
+Therefore, the slope and correlation have the same sign.
+
+
+6. VARIATION DECOMPOSITION AND R-SQUARED
+
+Observation-level decomposition:
+
+$$
+Y_i-\bar{Y}=(Y_i-\hat{Y}_i)+(\hat{Y}_i-\bar{Y}).
+$$
+
+| Quantity | Definition and meaning |
+|---|---|
+| $\mathrm{SSTO}$ | $\sum(Y_i-\bar{Y})^2$: total response variation. |
+| $\mathrm{SSR}$ | $\sum(\hat{Y}_i-\bar{Y})^2$: variation explained by regression. |
+| $\mathrm{SSE}$ | $\sum(Y_i-\hat{Y}_i)^2$: unexplained or error variation. |
+
+$$
+\mathrm{SSTO}=\mathrm{SSR}+\mathrm{SSE}.
+$$
+
+$$
+R^2=\frac{\mathrm{SSR}}{\mathrm{SSTO}}
+   =1-\frac{\mathrm{SSE}}{\mathrm{SSTO}}.
+$$
+
+- $0\le R^2\le 1$.
+- Interpret $100R^2\%$ as the percentage of variation in $Y$ explained,
+  or reduced, by accounting for $x$ through the fitted line.
+- In simple regression with an intercept, $R^2=r^2$.
+- Recover the sign of $r$ from the fitted slope.
+
+Examples:
+
+| Relationship | Summary |
+|---|---|
+| Height vs GPA | $R^2=0.0028$, $r=-0.053$: almost no linear association. |
+| Mortality vs latitude | $R^2=0.6798$, $r\approx-0.82$: fairly strong negative linear association. |
+| Fahrenheit vs Celsius | $R^2=1$, $r=1$: perfect positive line. |
+| Stories vs height | $r=0.951$, $R^2=90.4\%$. |
+| Age vs seeing distance | $r=-0.801$, $R^2=64.2\%$. |
+
+
+7. ESTIMATING ERROR VARIANCE
+
+Without a predictor:
+
+$$
+s^2=\frac{\sum(Y_i-\bar{Y})^2}{n-1}.
+$$
+
+With a fitted line, residuals replace deviations from $\bar{Y}$:
+
+$$
+\mathrm{MSE}
+=\frac{\mathrm{SSE}}{n-2}
+=\frac{\sum(Y_i-\hat{Y}_i)^2}{n-2}.
+$$
+
+$$
+\hat{\sigma}^2=\mathrm{MSE},
+\qquad
+\hat{\sigma}=\sqrt{\mathrm{MSE}},
+\qquad
+E(\mathrm{MSE})=\sigma^2.
+$$
+
+- The denominator is $n-2$ because $\beta_0$ and $\beta_1$ are estimated.
+- Smaller MSE means responses cluster more tightly around the fitted line and
+  inference is more precise, all else equal.
+
+
+8. STANDARD ERRORS AND SAMPLING DISTRIBUTIONS
+
+$$
+\operatorname{se}(b_1)=\frac{\hat{\sigma}}{\sqrt{S_{xx}}}.
+$$
+
+$$
+\operatorname{se}(b_0)
+=\hat{\sigma}\sqrt{\frac{1}{n}+\frac{\bar{x}^2}{S_{xx}}}.
+$$
+
+When the LINE conditions hold:
+
+$$
+\frac{b_1-\beta_1}{\operatorname{se}(b_1)}\sim t_{n-2},
+$$
+
+$$
+\frac{b_0-\beta_0}{\operatorname{se}(b_0)}\sim t_{n-2}.
+$$
+
+Lower MSE, larger predictor spread $S_{xx}$, and generally larger $n$ reduce
+standard errors.
+
+
+9. CONFIDENCE INTERVALS FOR COEFFICIENTS
+
+Slope:
+
+$$
+b_1\pm t_{n-2,1-\alpha/2}\operatorname{se}(b_1).
+$$
+
+Intercept:
+
+$$
+b_0\pm t_{n-2,1-\alpha/2}\operatorname{se}(b_0).
+$$
+
+A $100(1-\alpha)\%$ interval has the form
+
+$$
+\text{sample estimate}\pm
+(\text{$t$ multiplier})(\text{standard error}).
+$$
+
+Interpret the slope interval in response units per predictor unit. Interval
+width is
+
+$$
+2t_{n-2,1-\alpha/2}\operatorname{se}(b_1).
+$$
+
+It increases with confidence level and MSE, and decreases with $S_{xx}$ and
+sample information.
+
+NOTE - Confidence meaning:
+The confidence level is the long-run coverage of the interval procedure.
+After sampling, both the parameter and computed interval are fixed.
+
+
+10. GOODNESS-OF-FIT CAUTIONS AND STUDY DESIGN
+
+- A large $R^2$ does not prove that a straight line fits well. A curved
+  pattern may still have high $R^2$.
+- One or a few influential observations can greatly change the slope, $r$,
+  and $R^2$.
+- Association is not causation. In an observational study, predictor values
+  are merely observed and confounding may explain the association.
+- In a well-designed experiment, the researcher controls predictor values;
+  causal conclusions may be supported when the design is valid.
+
+
+11. HYPOTHESIS-TEST LOGIC
+
+- State $H_0$ and $H_1$ about a population parameter.
+- Choose $\alpha$, often 0.05.
+- Calculate a statistic whose null distribution is known.
+- Find the p-value or equivalent rejection region.
+- The p-value is the probability, assuming $H_0$, of data at least as extreme
+  as observed.
+- Reject $H_0$ if $p<\alpha$; otherwise fail to reject $H_0$.
+- Never write "accept $H_0$."
+
+
+12. T TESTS FOR SLOPE AND INTERCEPT
+
+Two-sided slope test:
+
+$$
+H_0:\beta_1=\beta_{10}
+\qquad\text{vs}\qquad
+H_1:\beta_1\ne\beta_{10}.
+$$
+
+$$
+t^*=\frac{b_1-\beta_{10}}{\operatorname{se}(b_1)}
+\sim t_{n-2}\quad\text{under }H_0.
+$$
+
+$$
+p=2P\left(t_{n-2}>|t^*|\right).
+$$
+
+Reject when
+
+$$
+|t^*|>t_{n-2,1-\alpha/2}.
+$$
+
+The usual regression test $H_0:\beta_1=0$ asks whether there is evidence of
+a population linear association. For this test:
+
+$$
+t^*=\frac{b_1}{\operatorname{se}(b_1)}.
+$$
+
+Two-sided intercept test:
+
+$$
+H_0:\beta_0=\beta_{00}
+\qquad\text{vs}\qquad
+H_1:\beta_0\ne\beta_{00}.
+$$
+
+$$
+t^*=\frac{b_0-\beta_{00}}{\operatorname{se}(b_0)}
+\sim t_{n-2}\quad\text{under }H_0.
+$$
+
+For the same $\alpha$, a two-sided test rejects exactly when the corresponding
+$100(1-\alpha)\%$ confidence interval excludes the null value.
+
+NOTE - One-sided tests:
+For a prespecified $\beta<$ value or $\beta>$ value alternative, use the signed
+$t$ statistic and the appropriate one-tail probability. Do not select the
+direction after viewing the data.
+
+
+13. MEAN RESPONSE VS ONE NEW RESPONSE
+
+| Target | Wording and parameter |
+|---|---|
+| Mean response | Average, expected, or typical response for all units at $x_h$; target $E(Y_h)$. |
+| New response | One individual, a particular future unit, or tomorrow's value; target $Y_{h(\mathrm{new})}$. |
+
+Common point estimate:
+
+$$
+\hat{Y}_h=b_0+b_1x_h.
+$$
+
+Confidence interval for the mean response $E(Y_h)$:
+
+$$
+\operatorname{se}(\hat{Y}_h)
+=\hat{\sigma}\sqrt{
+\frac{1}{n}+\frac{(x_h-\bar{x})^2}{S_{xx}}
+}.
+$$
+
+$$
+\hat{Y}_h\pm
+t_{n-2,1-\alpha/2}\operatorname{se}(\hat{Y}_h).
+$$
+
+Prediction interval for one new response $Y_{h(\mathrm{new})}$:
+
+$$
+\operatorname{se}(\mathrm{pred})
+=\hat{\sigma}\sqrt{
+1+\frac{1}{n}+\frac{(x_h-\bar{x})^2}{S_{xx}}
+}.
+$$
+
+$$
+\hat{Y}_h\pm
+t_{n-2,1-\alpha/2}\operatorname{se}(\mathrm{pred}).
+$$
+
+- Both intervals use the same center and $n-2$ degrees of freedom.
+- The prediction interval adds irreducible individual-response variance
+  $\hat{\sigma}^2$, represented by the extra 1 inside the square root.
+- Therefore, the prediction interval is always wider.
+- The mean-response standard error can approach zero as information increases.
+- The prediction standard error cannot approach zero while $\hat{\sigma}>0$.
+
+
+14. WHAT CONTROLS RESPONSE-INTERVAL WIDTH?
+
+- Higher confidence or larger MSE makes the interval wider.
+- Larger $n$ or larger $S_{xx}$ makes the interval narrower.
+- Values of $x_h$ closer to $\bar{x}$ produce narrower intervals.
+- Both intervals are narrowest at $x_h=\bar{x}$.
+- Moving away from $\bar{x}$ increases uncertainty.
+- Extrapolation beyond the observed predictor range is especially risky.
+
+Classifying common questions:
+
+| Question | Use |
+|---|---|
+| Average life expectancy at 2 packs/day | Mean-response confidence interval. |
+| Lung function of one 80-year-old woman | Prediction interval. |
+| Tomorrow's greenhouse humidity at 31 degrees C | Prediction interval. |
+| Typical weight of women 65 inches tall | Mean-response confidence interval. |
+
+
+15. REGRESSION ANOVA
+
+Sum-of-squares and degrees-of-freedom decompositions:
+
+$$
+\mathrm{SSTO}=\mathrm{SSR}+\mathrm{SSE},
+\qquad
+n-1=1+(n-2).
+$$
+
+| Source | df | SS | MS | F |
+|---|---:|---|---|---|
+| Regression | $1$ | SSR | $\mathrm{MSR}=\mathrm{SSR}/1=\mathrm{SSR}$ | $\mathrm{MSR}/\mathrm{MSE}$ |
+| Error | $n-2$ | SSE | $\mathrm{MSE}=\mathrm{SSE}/(n-2)$ | |
+| Total | $n-1$ | SSTO | | |
+
+Expected mean squares:
+
+$$
+E(\mathrm{MSE})=\sigma^2,
+\qquad
+E(\mathrm{MSR})=\sigma^2+\beta_1^2S_{xx}.
+$$
+
+If $\beta_1=0$, MSR and MSE both estimate $\sigma^2$, so their ratio should
+be near 1. If $\beta_1\ne0$, MSR tends to exceed MSE.
+
+
+16. F TEST FOR THE POPULATION SLOPE
+
+$$
+H_0:\beta_1=0
+\qquad\text{vs}\qquad
+H_1:\beta_1\ne0.
+$$
+
+$$
+F^*=\frac{\mathrm{MSR}}{\mathrm{MSE}}
+=\frac{\mathrm{SSR}/1}{\mathrm{SSE}/(n-2)}
+\sim F(1,n-2)\quad\text{under }H_0.
+$$
+
+Reject for a sufficiently large $F^*$.
+
+For simple linear regression:
+
+$$
+F^*=(t^*)^2.
+$$
+
+Therefore, the ANOVA F test and the two-sided slope t test have the same
+p-value.
+
+NOTE - Direction:
+The F statistic is nonnegative and $\beta_1$ is squared in $E(\mathrm{MSR})$,
+so this test is for $\beta_1\ne0$. Use the signed t statistic for
+$\beta_1<0$ or $\beta_1>0$.
+
+
+17. WORKED EXAMPLE: MORTALITY VS LATITUDE
+
+Fitted line and sample size:
+
+$$
+\hat{Y}=389.1894-5.9776x,
+\qquad
+n=49.
+$$
+
+| Quantity | Value and interpretation |
+|---|---|
+| Slope | $-5.9776$ with SE $0.5984$. Each 1-degree increase in latitude is associated with about 5.98 fewer deaths per 10 million in mean mortality. |
+| Slope test | $t=-9.9898$, $p=3.309\times10^{-13}$: very strong evidence that $\beta_1\ne0$. |
+| Residual variation | $\hat{\sigma}=19.12$, MSE approximately $365$, error df $=47$. |
+| Sums of squares | SSR $=36{,}464$, SSE $=17{,}173$, SSTO $=53{,}637$. |
+| Goodness of fit | $R^2=0.6798$: 67.98% of mortality variation is explained by the fitted linear relationship with latitude. |
+| ANOVA | $F=99.797$ on $(1,47)$ df; $F=t^2$. |
+| At $x_h=40$ | $\hat{Y}_h=150.084$. Reported 95% prediction interval for one location: 111.235 to 188.933 deaths per 10 million. |
+
+Arithmetic checks:
+- $36{,}464+17{,}173=53{,}637$.
+- $1+47=48$.
+- $36{,}464/365\approx99.8$.
+- $\mathrm{SSR}/\mathrm{SSTO}=0.6798$.
+- The intercept predicts mortality at latitude 0, far outside the data range,
+  so it is not substantively useful.
+
+
+18. WORKED EXAMPLE: HEIGHT AND WEIGHT
+
+$$
+\hat{Y}=-266.53+6.14x,
+\qquad
+r=0.947,
+\qquad
+\mathrm{MSE}=74.673.
+$$
+
+- Each additional inch predicts about 6.14 lb higher mean weight.
+- The intercept $-266.53$ lb is meaningless because $x=0$ inches is outside
+  the data.
+- Among proposed lines, the line with the smaller $\sum e_i^2$ is the better
+  least-squares fit.
+
+
+19. COMPLETE STATISTICAL CONCLUSION TEMPLATES
+
+Slope test:
+At $\alpha=$ [level], test $H_0:\beta_1=$ [value] versus
+$H_1:$ [alternative]. The statistic is $t^*=$ [value] with $n-2$ df and
+$p=$ [value]. Because $p$ [comparison] $\alpha$, [reject/fail to reject]
+$H_0$. There [is/is not] sufficient evidence that [population statement].
+
+Slope confidence interval:
+We are $100(1-\alpha)\%$ confident that the population mean response changes
+by between [L] and [U] response units for each one-unit increase in the
+predictor.
+
+Prediction interval:
+We are $100(1-\alpha)\%$ confident that one new response at $x_h$ will lie
+between [L] and [U] [response units].
+
+
+20. COMPACT FORMULA SHEET
+
+| Quantity | Formula |
+|---|---|
+| Means | $\bar{x}=\sum x_i/n$, $\bar{Y}=\sum Y_i/n$ |
+| Sums | $S_{xx}=\sum(x_i-\bar{x})^2$, $S_{yy}=\sum(Y_i-\bar{Y})^2$, $S_{xy}=\sum(x_i-\bar{x})(Y_i-\bar{Y})$ |
+| Least squares | $b_1=S_{xy}/S_{xx}$, $b_0=\bar{Y}-b_1\bar{x}$, $\hat{Y}=b_0+b_1x$ |
+| Residual | $e_i=Y_i-\hat{Y}_i$, $\mathrm{SSE}=\sum e_i^2$ |
+| Correlation | $r=S_{xy}/\sqrt{S_{xx}S_{yy}}$ |
+| Variance | $\mathrm{MSE}=\mathrm{SSE}/(n-2)$, $\hat{\sigma}=\sqrt{\mathrm{MSE}}$ |
+| Coefficient SE | $\operatorname{se}(b_1)=\hat{\sigma}/\sqrt{S_{xx}}$, $\operatorname{se}(b_0)=\hat{\sigma}\sqrt{1/n+\bar{x}^2/S_{xx}}$ |
+| R-squared | $R^2=\mathrm{SSR}/\mathrm{SSTO}=1-\mathrm{SSE}/\mathrm{SSTO}=r^2$ |
+| Coefficient CI | $b_j\pm t_{n-2,1-\alpha/2}\operatorname{se}(b_j)$ |
+| Coefficient test | $t^*=(b_j-\beta_{j0})/\operatorname{se}(b_j)$ |
+| Mean-response CI | $\hat{Y}_h\pm t^*\hat{\sigma}\sqrt{1/n+(x_h-\bar{x})^2/S_{xx}}$ |
+| Prediction interval | $\hat{Y}_h\pm t^*\hat{\sigma}\sqrt{1+1/n+(x_h-\bar{x})^2/S_{xx}}$ |
+| ANOVA F | $F^*=\mathrm{MSR}/\mathrm{MSE}\sim F(1,n-2)$ under $H_0:\beta_1=0$; $F^*=(t^*)^2$ |
+
+
+21. PROCEDURE DECISION GUIDE
+
+| Question asks about | Use |
+|---|---|
+| Best-fitting line | Least squares: $b_0,b_1$. |
+| Direction or strength | Scatterplot, $r$, and $R^2$. |
+| Population slope or intercept | t interval or t test, df $=n-2$. |
+| Average response at $x_h$ | Confidence interval for $E(Y_h)$. |
+| One future outcome at $x_h$ | Prediction interval for $Y_{h(\mathrm{new})}$. |
+| Regression ANOVA | SSR, SSE, SSTO, and $F=\mathrm{MSR}/\mathrm{MSE}$. |
+
+
+22. COMMON EXAM TRAPS
+
+- Using $n-1$ for MSE. Regression estimates two coefficients, so error
+  df $=n-2$.
+- Using MSE where a standard error requires
+  $\hat{\sigma}=\sqrt{\mathrm{MSE}}$.
+- Reporting $r=\sqrt{R^2}$ without the slope sign. Use
+  $r=\operatorname{sign}(b_1)\sqrt{R^2}$.
+- Saying the slope changes an individual response. It estimates change in the
+  mean response.
+- Using a prediction interval for an average, or a confidence interval for one
+  future unit.
+- Interpreting the intercept without checking whether $x=0$ is meaningful and
+  within the observed range.
+- Treating the p-value as $P(H_0\text{ is true})$.
+- Writing "accept $H_0$" when $p\ge\alpha$.
+- Claiming causation from observational association.
+- Calling a high $R^2$ proof of a good linear model.
+- Using F for a directional slope test; F loses the slope sign.
+
+
+23. FINAL ANSWER CHECKLIST
+
+- Define the population parameter and target population.
+- State $H_0$, $H_1$, $\alpha$, statistic, degrees of freedom, and p-value
+  when testing.
+- Show the formula substitution or calculation, not just a final number.
+- Name the correct target: coefficient, mean response, or one new response.
+- Attach units to slopes, predicted values, and interval endpoints.
+- Use "fail to reject," not "accept," and interpret the result in context.
+- Check LINE conditions, influential points, and whether extrapolation is
+  occurring.
+- For $R^2$, state the percentage of response variation explained by the
+  fitted linear model.
+
+
+24. HIGH-YIELD TRUTHS
+
+- The least-squares line passes through $(\bar{x},\bar{Y})$.
+- Residuals sum to zero.
+- Slope and correlation have the same sign; $R^2$ loses direction.
+- Greater $S_{xx}$ improves slope precision.
+- Response intervals are narrowest near $\bar{x}$.
+- Prediction intervals are wider than mean-response confidence intervals.
+- In simple regression, the slope t test and ANOVA F test are equivalent for
+  the two-sided alternative.
+- Statistical significance, practical importance, linear adequacy, and
+  causality are different questions.
+
+======================================================================
+END OF AI-RECONSTRUCTION SOURCE
+======================================================================
